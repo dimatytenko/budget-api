@@ -1,0 +1,35 @@
+import createError from 'http-errors';
+import bcrypt from 'bcrypt';
+
+import { User } from '../../models/index.js';
+import createToken from '../../helpers/createToken.js';
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    const payload = { id: user._id, email };
+    const token = createToken(payload);
+
+    await User.findByIdAndUpdate(user._id, { token });
+
+    return res.status(200).json({
+      status: 'success',
+      code: 200,
+      data: {
+        token,
+        user: {
+          name: user.name,
+          surname: user.surname,
+          salary: user.salary,
+          email: user.email,
+        },
+      },
+    });
+  }
+  throw createError(401, 'Invalid credentials');
+};
+
+export default login;
