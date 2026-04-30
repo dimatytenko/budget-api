@@ -2,16 +2,18 @@ import createError from 'http-errors';
 
 const schemaValidation = (schema, message = '') => {
   return (req, res, next) => {
-    const { error } = schema.validate(req.body);
+    const { error, value } = schema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true,
+    });
 
     if (error) {
-      if (message) {
-        error.message = message;
-      }
+      const validationMessage = message || error.details[0].message;
 
-      throw createError(400, error);
+      throw createError(400, validationMessage);
     }
 
+    req.body = value;
     next();
   };
 };

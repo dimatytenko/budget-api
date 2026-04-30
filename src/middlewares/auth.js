@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import createError from 'http-errors';
 import { User } from '../models/index.js';
 
 const auth = async (req, res, next) => {
@@ -6,6 +7,10 @@ const auth = async (req, res, next) => {
   const [bearer, token] = authorization.split(' ');
 
   try {
+    if (!process.env.TOKEN_KEY) {
+      throw createError(500, 'TOKEN_KEY is not configured');
+    }
+
     if (bearer !== 'Bearer' || !token) {
       throw new Error('Not authorized');
     }

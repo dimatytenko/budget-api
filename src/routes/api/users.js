@@ -8,7 +8,7 @@ import {
   auth,
   ctrlWrapper,
 } from '../../middlewares/index.js';
-import { userAdd, userLogin } from '../../models/user.js';
+import { userAdd, userLogin, userUpdate } from '../../models/user.js';
 
 router.post(
   '/register',
@@ -21,5 +21,11 @@ router.post(
   ctrlWrapper(usersCtrl.login),
 );
 router.get('/me', auth, ctrlWrapper(usersCtrl.getCurrent));
+router.patch(
+  '/me',
+  auth,
+  schemaValidation(userUpdate),
+  ctrlWrapper(usersCtrl.updateCurrent),
+);
 router.post('/logout', auth, ctrlWrapper(usersCtrl.logout));
 export default router;

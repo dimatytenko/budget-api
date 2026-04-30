@@ -6,8 +6,9 @@ import createToken from '../../helpers/createToken.js';
 
 const register = async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail = email.toLowerCase().trim();
 
-  let user = await User.findOne({ email });
+  let user = await User.findOne({ email: normalizedEmail });
 
   if (user) {
     throw createError(409, 'This email address is already being used!');
@@ -16,10 +17,10 @@ const register = async (req, res) => {
   const encryptedPassword = await bcrypt.hash(password, 10);
 
   user = await User.create({
-    email,
+    email: normalizedEmail,
     password: encryptedPassword,
   });
-  const payload = { id: user._id, email };
+  const payload = { id: user._id, email: normalizedEmail };
   const token = createToken(payload);
   await User.findByIdAndUpdate(user._id, { token });
 
