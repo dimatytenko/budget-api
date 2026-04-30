@@ -1,9 +1,9 @@
 import express from 'express';
-// import swaggerUi from 'swagger-ui-express';
+import swaggerUi from 'swagger-ui-express';
 import logger from 'morgan';
 import cors from 'cors';
 
-// import docs from './docs.js';
+import docs from './docs/index.js';
 
 import usersRouter from './routes/api/users.js';
 
@@ -15,7 +15,15 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(docs));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(docs, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  }),
+);
 
 app.use('/api/users', usersRouter);
 
