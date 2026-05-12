@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 import { User } from '../../models/index.js';
 import createToken from '../../helpers/createToken.js';
+import toPublicUser from '../../helpers/toPublicUser.js';
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -29,9 +30,7 @@ const register = async (req, res) => {
     code: 201,
     data: {
       token,
-      user: {
-        email: user.email,
-      },
+      user: toPublicUser(user),
     },
   });
 };
