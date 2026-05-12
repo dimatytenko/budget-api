@@ -41,6 +41,10 @@ const User = model('user', userSchema);
 
 const userAdd = Joi.object({
   password: Joi.string().min(8).max(32).required(),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref('password'))
+    .required()
+    .messages({ 'any.only': 'Password and confirm password must match' }),
   email: Joi.string().email().lowercase().trim().required(),
 });
 
