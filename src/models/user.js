@@ -15,17 +15,29 @@ const userSchema = Schema(
       required: [true, 'Password is required'],
       select: false,
     },
-    name: {
+    firstName: {
       type: String,
       minLength: 3,
       maxLength: 60,
     },
-    surname: {
+    lastName: {
       type: String,
       minLength: 3,
       maxLength: 60,
     },
     salary: {
+      type: Number,
+      default: null,
+    },
+    workHoursByWeek: {
+      type: Number,
+      default: null,
+    },
+    expectReturnPercentage: {
+      type: Number,
+      default: null,
+    },
+    investForYear: {
       type: Number,
       default: null,
     },
@@ -54,9 +66,12 @@ const userLogin = Joi.object({
 });
 
 const userUpdate = Joi.object({
-  name: Joi.string().min(3).max(60),
-  surname: Joi.string().min(3).max(60),
+  firstName: Joi.string().min(3).max(60),
+  lastName: Joi.string().min(3).max(60),
   salary: Joi.number().min(0).strict(),
+  workHoursByWeek: Joi.number().min(0).strict(),
+  expectReturnPercentage: Joi.number().min(0).strict(),
+  investForYear: Joi.number().min(0).strict(),
 }).min(1);
 
 export { User, userAdd, userLogin, userUpdate };

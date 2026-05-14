@@ -1,9 +1,12 @@
 const toPublicUser = user => ({
   id: user._id,
   email: user.email,
-  name: user.name,
-  surname: user.surname,
+  firstName: user.firstName,
+  lastName: user.lastName,
   salary: user.salary,
+  workHoursByWeek: user.workHoursByWeek,
+  expectReturnPercentage: user.expectReturnPercentage,
+  investForYear: user.investForYear,
 });
 
 export default toPublicUser;

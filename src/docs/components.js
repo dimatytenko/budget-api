@@ -11,18 +11,23 @@ const components = {
       User: {
         type: 'object',
         properties: {
+          id: { type: 'string', example: '664f1b2c3e4a5b6c7d8e9f00' },
           email: { type: 'string', format: 'email', example: 'user@example.com' },
-          name: { type: 'string', nullable: true, example: 'John' },
-          surname: { type: 'string', nullable: true, example: 'Doe' },
+          firstName: { type: 'string', nullable: true, example: 'John' },
+          lastName: { type: 'string', nullable: true, example: 'Doe' },
           salary: { type: 'number', nullable: true, example: 45000 },
+          workHoursByWeek: { type: 'number', nullable: true, example: 40 },
+          expectReturnPercentage: { type: 'number', nullable: true, example: 15 },
+          investForYear: { type: 'number', nullable: true, example: 5 },
         },
       },
       RegisterBody: {
         type: 'object',
-        required: ['email', 'password'],
+        required: ['email', 'password', 'confirmPassword'],
         properties: {
           email: { type: 'string', format: 'email', example: 'user@example.com' },
           password: { type: 'string', minLength: 8, maxLength: 32, example: 'StrongPass123' },
+          confirmPassword: { type: 'string', example: 'StrongPass123' },
         },
       },
       LoginBody: {
@@ -35,10 +40,14 @@ const components = {
       },
       UpdateMeBody: {
         type: 'object',
+        minProperties: 1,
         properties: {
-          name: { type: 'string', minLength: 3, maxLength: 60, example: 'John' },
-          surname: { type: 'string', minLength: 3, maxLength: 60, example: 'Doe' },
+          firstName: { type: 'string', minLength: 3, maxLength: 60, example: 'John' },
+          lastName: { type: 'string', minLength: 3, maxLength: 60, example: 'Doe' },
           salary: { type: 'number', minimum: 0, example: 45000 },
+          workHoursByWeek: { type: 'number', minimum: 0, example: 40 },
+          expectReturnPercentage: { type: 'number', minimum: 0, example: 15 },
+          investForYear: { type: 'number', minimum: 0, example: 5 },
         },
         additionalProperties: false,
       },
