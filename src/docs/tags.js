@@ -4,6 +4,10 @@ const tags = {
       name: 'Users',
       description: 'User authentication and profile management',
     },
+    {
+      name: 'Purchases',
+      description: 'Purchase analysis and decision tracking',
+    },
   ],
 };
 
