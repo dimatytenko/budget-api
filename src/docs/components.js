@@ -113,7 +113,7 @@ const components = {
           investForYear: { type: 'number', example: 1 },
           status: {
             type: 'string',
-            enum: ['pending', 'analyzed', 'approved', 'rejected'],
+            enum: ['pending', 'bought', 'rejected'],
             example: 'pending',
           },
           decisionEndsAt: {
@@ -192,6 +192,85 @@ const components = {
             },
           },
         },
+      },
+      Pagination: {
+        type: 'object',
+        properties: {
+          page: { type: 'integer', example: 1 },
+          limit: { type: 'integer', example: 10 },
+          total: { type: 'integer', example: 42 },
+          totalPages: { type: 'integer', example: 5 },
+        },
+      },
+      PurchaseResponse: {
+        type: 'object',
+        properties: {
+          status: { type: 'string', example: 'success' },
+          code: { type: 'number', example: 200 },
+          data: {
+            type: 'object',
+            properties: {
+              purchase: { $ref: '#/components/schemas/Purchase' },
+            },
+          },
+        },
+      },
+      PurchaseListResponse: {
+        type: 'object',
+        properties: {
+          status: { type: 'string', example: 'success' },
+          code: { type: 'number', example: 200 },
+          data: {
+            type: 'object',
+            properties: {
+              purchases: {
+                type: 'array',
+                items: { $ref: '#/components/schemas/Purchase' },
+              },
+              pagination: { $ref: '#/components/schemas/Pagination' },
+            },
+          },
+        },
+      },
+      UpdatePurchaseStatusBody: {
+        type: 'object',
+        required: ['status'],
+        properties: {
+          status: {
+            type: 'string',
+            enum: ['bought', 'rejected'],
+            example: 'bought',
+          },
+        },
+        additionalProperties: false,
+      },
+      ExtendPurchaseDecisionBody: {
+        type: 'object',
+        oneOf: [
+          {
+            required: ['decisionTimer'],
+            properties: {
+              decisionTimer: {
+                type: 'string',
+                enum: ['12h', '24h', '48h', '72h'],
+                example: '48h',
+              },
+            },
+            additionalProperties: false,
+          },
+          {
+            required: ['additionalHours'],
+            properties: {
+              additionalHours: {
+                type: 'integer',
+                minimum: 1,
+                maximum: 168,
+                example: 12,
+              },
+            },
+            additionalProperties: false,
+          },
+        ],
       },
     },
   },

@@ -112,4 +112,61 @@ const purchaseCreate = Joi.object({
   link: Joi.string().uri().optional().allow('', null),
 });
 
-export { Purchase, purchaseCreate, DECISION_TIMERS, PURCHASE_STATUSES };
+const normalizePurchaseStatuses = (value, helpers) => {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+
+  const raw = Array.isArray(value) ? value : [value];
+  const statuses = raw
+    .flatMap(item => String(item).split(','))
+    .map(item => item.trim())
+    .filter(Boolean);
+
+  const invalid = statuses.filter(s => !PURCHASE_STATUSES.includes(s));
+  if (invalid.length > 0) {
+    return helpers.error('any.invalid');
+  }
+
+  return [...new Set(statuses)];
+};
+
+const purchaseListQuery = Joi.object({
+  status: Joi.custom(normalizePurchaseStatuses).messages({
+    'any.invalid': `status must be one of: ${PURCHASE_STATUSES.join(', ')}`,
+  }),
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(50).default(10),
+  sort: Joi.string().valid('createdAt', 'decisionEndsAt').default('createdAt'),
+  order: Joi.string().valid('asc', 'desc').default('desc'),
+});
+
+const purchaseStatusUpdate = Joi.object({
+  status: Joi.string()
+    .valid('bought', 'rejected')
+    .required()
+    .messages({
+      'any.required': 'status is required',
+      'any.only': 'status must be bought or rejected',
+    }),
+});
+
+const purchaseExtendDecision = Joi.object({
+  decisionTimer: Joi.string().valid(...DECISION_TIMERS),
+  additionalHours: Joi.number().integer().min(1).max(168),
+})
+  .xor('decisionTimer', 'additionalHours')
+  .messages({
+    'object.missing': 'Either decisionTimer or additionalHours is required',
+    'object.xor': 'Provide only decisionTimer or additionalHours, not both',
+  });
+
+export {
+  Purchase,
+  purchaseCreate,
+  purchaseListQuery,
+  purchaseStatusUpdate,
+  purchaseExtendDecision,
+  DECISION_TIMERS,
+  PURCHASE_STATUSES,
+};
