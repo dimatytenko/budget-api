@@ -13,7 +13,7 @@ const queryValidation = (schema, message = '') => {
       throw createError(400, validationMessage);
     }
 
-    req.query = value;
+    req.validatedQuery = value;
     next();
   };
 };

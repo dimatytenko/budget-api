@@ -4,7 +4,7 @@ import toPublicPurchase from '../../helpers/toPublicPurchase.js';
 const list = async (req, res) => {
   const { purchases, pagination } = await purchaseService.listPurchases(
     req.user._id,
-    req.query,
+    req.validatedQuery,
   );
 
   res.status(200).json({
