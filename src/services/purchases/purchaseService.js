@@ -95,6 +95,66 @@ const updatePurchaseStatus = async (userId, purchaseId, status) => {
   return updated;
 };
 
+const EMPTY_PURCHASE_STATISTICS = {
+  totalSaved: 0,
+  workHours: 0,
+  annualReturn: 0,
+  rejectedCount: 0,
+  pendingCount: 0,
+  boughtCount: 0,
+};
+
+const round = (value, decimals = 2) =>
+  Math.round(value * 10 ** decimals) / 10 ** decimals;
+
+const getPurchaseStatistics = async userId => {
+  const [result] = await Purchase.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(String(userId)) } },
+    {
+      $group: {
+        _id: null,
+        totalSaved: {
+          $sum: {
+            $cond: [
+              { $eq: ['$status', 'rejected'] },
+              { $multiply: ['$price', '$quantity'] },
+              0,
+            ],
+          },
+        },
+        workHours: {
+          $sum: { $ifNull: ['$statistics.workHoursToPay', 0] },
+        },
+        annualReturn: {
+          $sum: { $ifNull: ['$statistics.investmentIncome', 0] },
+        },
+        rejectedCount: {
+          $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] },
+        },
+        pendingCount: {
+          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
+        },
+        boughtCount: {
+          $sum: { $cond: [{ $eq: ['$status', 'bought'] }, 1, 0] },
+        },
+      },
+    },
+  ]);
+
+  if (!result) {
+    return EMPTY_PURCHASE_STATISTICS;
+  }
+
+  return {
+    totalSaved: round(result.totalSaved),
+    workHours: round(result.workHours),
+    annualReturn: round(result.annualReturn),
+    rejectedCount: result.rejectedCount,
+    pendingCount: result.pendingCount,
+    boughtCount: result.boughtCount,
+  };
+};
+
 const extendPurchaseDecision = async (userId, purchaseId, payload) => {
   const purchase = await findOwnPurchase(userId, purchaseId);
 
@@ -128,6 +188,7 @@ export {
   listPurchases,
   getPurchaseById,
   getLatestPurchase,
+  getPurchaseStatistics,
   deletePurchase,
   updatePurchaseStatus,
   extendPurchaseDecision,

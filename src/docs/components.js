@@ -241,6 +241,61 @@ const components = {
           },
         },
       },
+      PurchaseOverviewStatistics: {
+        type: 'object',
+        properties: {
+          totalSaved: {
+            type: 'number',
+            minimum: 0,
+            description:
+              'Sum of price × quantity for rejected purchases (money saved by not buying).',
+            example: 150.68,
+          },
+          workHours: {
+            type: 'number',
+            minimum: 0,
+            description:
+              'Sum of statistics.workHoursToPay across all purchases (decimal hours).',
+            example: 85.33,
+          },
+          annualReturn: {
+            type: 'number',
+            description:
+              'Sum of statistics.investmentIncome across all purchases (USD).',
+            example: 300,
+          },
+          rejectedCount: {
+            type: 'integer',
+            minimum: 0,
+            example: 2,
+          },
+          pendingCount: {
+            type: 'integer',
+            minimum: 0,
+            example: 1,
+          },
+          boughtCount: {
+            type: 'integer',
+            minimum: 0,
+            example: 1,
+          },
+        },
+      },
+      PurchaseStatisticsResponse: {
+        type: 'object',
+        properties: {
+          status: { type: 'string', example: 'success' },
+          code: { type: 'number', example: 200 },
+          data: {
+            type: 'object',
+            properties: {
+              statistics: {
+                $ref: '#/components/schemas/PurchaseOverviewStatistics',
+              },
+            },
+          },
+        },
+      },
       PurchaseListResponse: {
         type: 'object',
         properties: {

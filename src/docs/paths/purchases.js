@@ -172,6 +172,77 @@ const purchasesPaths = {
       },
     },
   },
+  '/api/purchases/statistics': {
+    get: {
+      tags: ['Purchases'],
+      summary: 'Get aggregated purchase statistics for History overview',
+      description:
+        'Returns overview metrics for the authenticated user across all purchases (no pagination). Empty user returns zeros.',
+      security: [{ bearerAuth: [] }],
+      responses: {
+        200: {
+          description: 'Aggregated statistics',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/PurchaseStatisticsResponse',
+              },
+              examples: {
+                default: {
+                  value: {
+                    status: 'success',
+                    code: 200,
+                    data: {
+                      statistics: {
+                        totalSaved: 150.68,
+                        workHours: 85.33,
+                        annualReturn: 300,
+                        rejectedCount: 2,
+                        pendingCount: 1,
+                        boughtCount: 1,
+                      },
+                    },
+                  },
+                },
+                empty: {
+                  value: {
+                    status: 'success',
+                    code: 200,
+                    data: {
+                      statistics: {
+                        totalSaved: 0,
+                        workHours: 0,
+                        annualReturn: 0,
+                        rejectedCount: 0,
+                        pendingCount: 0,
+                        boughtCount: 0,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        401: {
+          description: 'Unauthorized',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+        500: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ErrorResponse' },
+            },
+          },
+        },
+      },
+    },
+  },
   '/api/purchases/latest': {
     get: {
       tags: ['Purchases'],

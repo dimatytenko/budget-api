@@ -23,6 +23,7 @@ router.get(
   queryValidation(purchaseListQuery),
   ctrlWrapper(purchasesCtrl.list),
 );
+router.get('/statistics', auth, ctrlWrapper(purchasesCtrl.getStatistics));
 router.get('/latest', auth, ctrlWrapper(purchasesCtrl.getLatest));
 router.get('/:id', auth, ctrlWrapper(purchasesCtrl.getById));
 router.delete('/:id', auth, ctrlWrapper(purchasesCtrl.remove));
