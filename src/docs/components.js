@@ -84,6 +84,31 @@ const components = {
           message: { type: 'string', example: 'Invalid credentials' },
         },
       },
+      PurchaseStatistics: {
+        type: 'object',
+        properties: {
+          workHoursToPay: {
+            type: 'number',
+            minimum: 0,
+            description:
+              'Work hours to pay: (price × quantity) / hourly rate, where hourly rate = (salary × 12) / (workHoursByWeek × 52). Stored as decimal hours (e.g. 85.33 = 85h 20m).',
+            example: 92.44,
+          },
+          incomePercent: {
+            type: 'number',
+            minimum: 0,
+            description:
+              'Share of monthly income: ((price × quantity) / salary) × 100.',
+            example: 53.33,
+          },
+          investmentIncome: {
+            type: 'number',
+            description:
+              'Potential investment gain: (price × quantity) × ((1 + expectReturnPercentage / 100) ^ investForYear − 1).',
+            example: 128,
+          },
+        },
+      },
       Purchase: {
         type: 'object',
         properties: {
@@ -111,6 +136,7 @@ const components = {
           workHoursByWeek: { type: 'number', example: 40 },
           expectReturnPercentage: { type: 'number', example: 8 },
           investForYear: { type: 'number', example: 1 },
+          statistics: { $ref: '#/components/schemas/PurchaseStatistics' },
           status: {
             type: 'string',
             enum: ['pending', 'bought', 'rejected'],

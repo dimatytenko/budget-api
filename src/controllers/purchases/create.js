@@ -1,6 +1,7 @@
 import createError from 'http-errors';
 import { Purchase, User } from '../../models/index.js';
 import getDecisionEndsAt from '../../helpers/getDecisionEndsAt.js';
+import calculatePurchaseStats from '../../helpers/calculatePurchaseStats.js';
 import toPublicPurchase from '../../helpers/toPublicPurchase.js';
 import toUserFinancialSnapshot from '../../helpers/toUserFinancialSnapshot.js';
 
@@ -35,6 +36,14 @@ const create = async (req, res) => {
 
   const createdAt = new Date();
   const imageUrl = req.file ? `/uploads/purchases/${req.file.filename}` : null;
+  const stats = calculatePurchaseStats({
+    price,
+    quantity,
+    salary,
+    workHoursByWeek,
+    expectReturnPercentage,
+    investForYear,
+  });
 
   const purchase = await Purchase.create({
     userId,
@@ -46,6 +55,7 @@ const create = async (req, res) => {
     workHoursByWeek,
     expectReturnPercentage,
     investForYear,
+    statistics: stats,
     link: link || null,
     imageUrl,
     status: 'pending',

@@ -1,4 +1,11 @@
 /**
+ * @typedef {Object} PublicPurchaseStatistics
+ * @property {number} workHoursToPay - work hours needed to pay (decimal hours)
+ * @property {number} incomePercent - share of monthly income, %
+ * @property {number} investmentIncome - potential investment gain over investForYear
+ */
+
+/**
  * @typedef {Object} PublicPurchase
  * @property {string} id
  * @property {string} userId
@@ -12,6 +19,7 @@
  * @property {number} workHoursByWeek
  * @property {number} expectReturnPercentage
  * @property {number} investForYear
+ * @property {PublicPurchaseStatistics} statistics
  * @property {'pending'|'bought'|'rejected'} status
  * @property {Date} decisionEndsAt
  * @property {Date} createdAt
@@ -35,6 +43,11 @@ const toPublicPurchase = purchase => ({
   workHoursByWeek: purchase.workHoursByWeek,
   expectReturnPercentage: purchase.expectReturnPercentage,
   investForYear: purchase.investForYear,
+  statistics: {
+    workHoursToPay: purchase.statistics.workHoursToPay,
+    incomePercent: purchase.statistics.incomePercent,
+    investmentIncome: purchase.statistics.investmentIncome,
+  },
   status: purchase.status,
   decisionEndsAt: purchase.decisionEndsAt,
   createdAt: purchase.createdAt,

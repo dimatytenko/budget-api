@@ -54,6 +54,26 @@ const purchaseSchema = Schema(
       type: Number,
       required: [true, 'investForYear is required'],
     },
+    statistics: {
+      type: {
+        workHoursToPay: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+        incomePercent: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+        investmentIncome: {
+          type: Number,
+          required: true,
+        },
+      },
+      required: true,
+      _id: false,
+    },
     link: {
       type: String,
       default: null,

@@ -80,6 +80,11 @@ const purchasesPaths = {
                           workHoursByWeek: 40,
                           expectReturnPercentage: 8,
                           investForYear: 1,
+                          statistics: {
+                            workHoursToPay: 40.39,
+                            incomePercent: 23.3,
+                            investmentIncome: 55.92,
+                          },
                           status: 'pending',
                           decisionEndsAt: '2026-05-20T12:00:00.000Z',
                           createdAt: '2026-05-19T12:00:00.000Z',
@@ -121,7 +126,7 @@ const purchasesPaths = {
       tags: ['Purchases'],
       summary: 'Create a new purchase',
       description:
-        'Creates a purchase for the authenticated user. Accepts multipart/form-data (optional image field). Financial fields also update the user profile.',
+        'Creates a purchase for the authenticated user. Accepts multipart/form-data (optional image field). Financial fields also update the user profile. The `statistics` object is computed on the server and stored with the purchase.',
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
